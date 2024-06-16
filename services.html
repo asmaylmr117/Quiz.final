@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Mostafa Alanani</title>
+    <style>
+        body {
+            background-color: #05082cfd;
+        }
+
+        .logo {
+            width: 100px; /* تعديل الحجم للتناسب مع الشاشات الصغيرة */
+            height: auto;
+            margin-top: 2rem; /* ضبط الهامش العلوي */
+        }
+
+        @media (min-width: 640px) {
+            .logo {
+                width: 150px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .logo {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body class="flex flex-col justify-center items-center min-h-screen p-4">
+
+    <div id="quiz-container" class="bg-blue-800 bg-opacity-70 rounded-lg shadow-lg p-8 text-left w-full max-w-md sm:max-w-lg md:max-w-2xl lg:max-w-3xl">
+        <div id="quiz" class="text-white"></div>
+        <div class="button-container flex flex-col sm:flex-row gap-4 mt-4">
+            <button id="next-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hidden" onclick="loadNextQuestion()">Next Question</button>
+            <button id="start-quiz-btn" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="startQuiz()">Start Quiz</button>
+        </div>
+    </div>
+
+    <img src="mostafa.PNG" alt="logo" class="logo">
+
+    <script>
+        const quizData = [];
+        let currentQuiz = 0;
+        let score = 0;
+        let answeredQuestions = 0;
+
+        function startQuiz() {
+            currentQuiz = 0;
+            score = 0;
+            answeredQuestions = 0;
+
+            const storedQuizData = localStorage.getItem('quizData');
+            if (storedQuizData) {
+                quizData.length = 0;
+                quizData.push(...JSON.parse(storedQuizData));
+                console.log('Loaded quiz data from localStorage:', quizData);
+            }
+
+            document.getElementById('start-quiz-btn').classList.add('hidden');
+            document.getElementById('next-btn').classList.remove('hidden');
+            loadQuiz();
+        }
+
+        function loadQuiz() {
+            const quiz = document.getElementById('quiz');
+            if (quizData.length === 0) {
+                quiz.innerHTML = '<h2>No questions available yet</h2>';
+                document.getElementById('next-btn').classList.add('hidden');
+                document.getElementById('exit-btn').classList.remove('hidden');
+                return;
+            }
+
+            const currentQuizData = quizData[currentQuiz];
+            quiz.innerHTML = `
+                <h2>${currentQuizData.question}</h2>
+                <label class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="a"> ${currentQuizData.a}
+                </label><br>
+                <label class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="b"> ${currentQuizData.b}
+                </label><br>
+                <label class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="c"> ${currentQuizData.c}
+                </label><br>
+                <label class="form-check">
+                    <input class="form-check-input" type="radio" name="answer" value="d"> ${currentQuizData.d}
+                </label>
+            `;
+            document.getElementById('next-btn').classList.remove('hidden');
+            document.getElementById('exit-btn').classList.add('hidden');
+        }
+
+        function loadNextQuestion() {
+            const answerEls = document.querySelectorAll('input[name="answer"]');
+            let selectedAnswer;
+
+            answerEls.forEach(answerEl => {
+                if (answerEl.checked) {
+                    selectedAnswer = answerEl.value;
+                }
+            });
+
+            if (selectedAnswer) {
+                if (selectedAnswer === quizData[currentQuiz].correct) {
+                    score++;
+                }
+                answeredQuestions++;
+                currentQuiz++;
+                if (currentQuiz < quizData.length) {
+                    loadQuiz();
+                } else {
+                    showResults();
+                }
+            } else {
+                alert('Please choose an answer before moving on to the next question');
+            }
+        }
+
+        function showResults() {
+            const quiz = document.getElementById('quiz');
+            quiz.innerHTML = `
+                <h2>You have answered ${score} out of ${quizData.length} questions correctly</h2>
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="location.reload()">Reload</button>
+                <button id="exit-btn-final" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onclick="exitQuiz()">Exit</button>
+            `;
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('exit-btn').classList.add('hidden');
+            document.getElementById('exit-btn-final').classList.remove('hidden');
+        }
+
+        function exitQuiz() {
+            window.close();
+            window.location.href = 'about:blank';
+        }
+
+        window.onload = function () {
+            const storedQuizData = localStorage.getItem('quizData');
+            if (storedQuizData) {
+                quizData.length = 0;
+                quizData.push(...JSON.parse(storedQuizData));
+                console.log('Quiz data on load:', quizData);
+            }
+
+            document.getElementById('next-btn').classList.add('hidden');
+            document.getElementById('exit-btn').classList.add('hidden');
+        };
+    </script>
+</body>
+</html>

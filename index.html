@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <!-- تضمين Tailwind CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-image: url('mo.quiz.jpg');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+        h1 {
+            background: linear-gradient(90deg, #db2461f6, #64d9ee);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+             position:relative ;
+             top:-50px;
+        }
+        .custom-input {
+            background-color:  rgb(255, 255, 255,0.5);
+            padding: 10px;
+            font-size: 1.2em;
+            border-radius: 5px;
+            border: 1px solid #bd0707da;
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+        }
+        .custom-button {
+            background-color: rgba(30, 236, 236, 0.568);
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            color: white;
+            width: 100%;
+            max-width: 150px;
+        }
+        .custom-button:hover {
+            background-color: #00ffff;
+        }
+        .logo {
+            width: 200px;
+            position: relative;
+            margin: 20px auto;
+            opacity: 0.75;
+        }
+        input::placeholder{
+            color: rgb(0, 0, 0);
+            
+        }
+    </style>
+    <script>
+        function validateInput() {
+            var inputElement = document.getElementById("nameInput");
+            var input = inputElement.value.trim();
+
+            if (input === "") {
+                alert("Please enter your name");
+                return;
+            }
+
+            if (input === "Mostafa*1234") {
+                window.location.href = "contact.html";
+            } else {
+                window.location.href = "services.html";
+            }
+        }
+    </script>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen">
+
+    <div class="container text-center p-4">
+        <h1 class="text-4xl sm:text-5xl md:text-6xl mt-8">Welcome, Good luck</h1>
+        <div class="mt-4">
+            <input type="text" id="nameInput" class="custom-input mx-auto block mt-4" placeholder="Enter your name">
+        </div>
+        <div class="mt-4">
+            <button class="custom-button mx-auto block mt-4" onclick="validateInput()">Login</button>
+        </div>
+        <img src="mostafa.PNG" alt="logo" class="logo">
+    </div>
+
+</body>
+</html>
